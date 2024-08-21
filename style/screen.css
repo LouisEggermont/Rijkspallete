@@ -544,6 +544,25 @@ label {
   color: var(--global-color-secondary-alpha-075);
 }
 
+.c-footer {
+  background-color: var(
+    --global-color-primary
+  ); /* Of een andere kleur naar keuze */
+  color: var(--global-color-neutral-0); /* Witte tekst */
+  text-align: center;
+  padding: var(--global-whitespace-lg) var(--global-whitespace-md);
+  margin-top: var(--global-whitespace-xl);
+  color: var(--global-color-secondary);
+}
+
+.c-footer a {
+  text-decoration: underline;
+}
+
+.c-footer a:hover {
+  color: var(--global-color-secondary-alpha-075); /* Linkkleur bij hover */
+}
+
 @media (min-width: 768px) {
   .c-header__swatches {
     order: 3;
