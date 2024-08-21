@@ -473,7 +473,8 @@ label {
   order: 2;
   color: var(--global-text-color);
   font-size: var(--font-size-lg);
-  /* text-align: center; */
+  padding-top: var(--global-whitespace-xs);
+  text-align: left;
 }
 
 .c-row {
