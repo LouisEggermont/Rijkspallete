@@ -60,6 +60,33 @@ function fetchArtworksByPeriodAndColor(period, hexColor, replace = false) {
     .catch((error) => console.error("Error fetching artworks:", error));
 }
 
+function fetchArtworkDetails(objectNumber, image) {
+  const apiKey = "sNp968L7"; // Replace with your actual API key
+  const url = `https://www.rijksmuseum.nl/api/en/collection/${objectNumber}?key=${apiKey}&format=json`;
+
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      // console.log("Artwork Details:", data); // Debug
+      const artwork = data.artObject;
+      // console.log("Artwork:", artwork); // Debug
+
+      // Update the modal with new content
+      // document.querySelector(".modal-img").innerHTML = `
+      //   <img src="${artwork.webImage.url}" alt="${artwork.title}" view-transition-name="artwork-image" />
+      // `;
+
+      document.querySelector(".modal-details").innerHTML = `
+        <h2>${artwork.title}</h2>
+        <p>${artwork.principalOrFirstMaker}, ${artwork.dating.sortingDate} </p>
+        <p>${artwork.description || "No description available."}</p>
+      `;
+
+      openModal(image);
+    })
+    .catch((error) => console.error("Error fetching artwork details:", error));
+}
+
 function displayArtworks(artworks, replace = false) {
   const container = document.getElementById("artwork-container");
   if (replace) container.innerHTML = "";
@@ -67,9 +94,13 @@ function displayArtworks(artworks, replace = false) {
   artworks.forEach((artwork) => {
     const artworkDiv = document.createElement("div");
     artworkDiv.classList.add("c-artwork");
+    artworkDiv.setAttribute("id", artwork.objectNumber);
 
     const canvas = document.createElement("canvas");
     canvas.classList.add("filtered-artwork");
+    canvas.classList.add("artwork-thumbnail", "thumbnail");
+    canvas.setAttribute("data-thumbID", artwork.objectNumber);
+    canvas.setAttribute("view-transition-name", "artwork-image");
     artworkDiv.appendChild(canvas);
 
     const title = document.createElement("p");
@@ -78,6 +109,8 @@ function displayArtworks(artworks, replace = false) {
 
     artworkDiv.appendChild(title);
     container.appendChild(artworkDiv);
+
+    canvas.addEventListener("click", () => handleImageClick(canvas));
 
     if (applyFilter) {
       applySingleColorFilter(
@@ -175,13 +208,20 @@ function resizeGridItem(item) {
   const rowGap = parseInt(
     window.getComputedStyle(grid).getPropertyValue("grid-row-gap")
   );
-  const rowSpan = Math.ceil(
-    (item.querySelector("canvas").getBoundingClientRect().height +
-      item.querySelector(".c-artwork-title").getBoundingClientRect().height +
-      rowGap) /
-      (rowHeight + rowGap)
-  );
-  item.style.gridRowEnd = "span " + rowSpan;
+
+  const canvas = item.querySelector("canvas");
+  const title = item.querySelector(".c-artwork-title");
+
+  if (canvas && title) {
+    // Check if both elements exist
+    const rowSpan = Math.ceil(
+      (canvas.getBoundingClientRect().height +
+        title.getBoundingClientRect().height +
+        rowGap) /
+        (rowHeight + rowGap)
+    );
+    item.style.gridRowEnd = "span " + rowSpan;
+  }
 }
 
 function imagesLoaded(container, callback) {
@@ -234,4 +274,86 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("artwork-container"),
     resizeAllGridItems
   );
+});
+
+const thumbs = document.querySelectorAll(".thumbnail");
+const modal = document.querySelector(".modal");
+const modalImgContainer = document.querySelector(".modal-img");
+
+// thumbs.forEach((thumb) => {
+//   thumb.addEventListener("click", (e) => {
+//     const image = e.target;
+
+//     // Set the viewTransitionName to the selected image
+//     image.style.viewTransitionName = "artwork-image";
+
+//     document.startViewTransition(() => {
+//       openModal(image);
+//     });
+//   });
+// });
+function handleImageClick(image) {
+  const objectNumber = image.getAttribute("data-thumbID");
+  image.style.viewTransitionName = "artwork-image";
+
+  // Start the view transition first
+  document.startViewTransition(() => {
+    // Open the modal with a loading state
+    openModal(image, true);
+
+    // Fetch the artwork details asynchronously
+    fetchArtworkDetails(objectNumber);
+  });
+}
+
+thumbs.forEach((thumb) => {
+  thumb.addEventListener("click", (e) => {
+    handleImageClick(e.target);
+  });
+});
+
+function openModal(image) {
+  const modal = document.querySelector(".modal");
+  const modalImgContainer = document.querySelector(".modal-img");
+  modalImgContainer.appendChild(image); // Move the image to the modal
+  modal.classList.add("visible");
+  modal.classList.remove("hidden");
+}
+
+modal.addEventListener("click", (e) => {
+  if (e.target.classList.contains("modal")) {
+    const image = modalImgContainer.querySelector("img");
+
+    document.startViewTransition(() => {
+      closeModal(image);
+    });
+  }
+});
+
+function closeModal(image) {
+  const galleryParentID = image.getAttribute("data-thumbID");
+  const galleryParent = document.getElementById(galleryParentID);
+
+  if (galleryParent) {
+    galleryParent.appendChild(image); // Move the image back to its original location
+  }
+
+  const modal = document.querySelector(".modal");
+  modal.classList.add("hidden");
+  modal.classList.remove("visible");
+
+  // modalImgContainer.innerHTML = "";
+  document.querySelector(".modal-details").innerHTML = "";
+
+  // Remove the viewTransitionName after the transition
+  image.style.viewTransitionName = "";
+}
+
+document.querySelector(".modal").addEventListener("click", (e) => {
+  if (e.target.classList.contains("modal")) {
+    const image = document.querySelector(".modal-img canvas");
+    document.startViewTransition(() => {
+      closeModal(image);
+    });
+  }
 });

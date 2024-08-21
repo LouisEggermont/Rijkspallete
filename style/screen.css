@@ -10,6 +10,7 @@
 
   --global-color-secondary: #f9e9a8;
   --global-color-secondary-alpha-025: hsla(48, 87%, 82%, 0.25);
+  --global-color-secondary-alpha-075: hsla(48, 87%, 82%, 0.75);
 
   --global-color-neutral-1000: #530b0e;
   --global-color-neutral-900: #6d1b1d;
@@ -363,12 +364,6 @@ label {
 
 /* Style the select dropdown */
 
-@media (min-width: 768px) {
-  .c-header__swatches {
-    order: 3;
-  }
-}
-
 .c-time-filter select {
   background-color: var(--global-input-background-color);
   border: var(--global-input-border-width) solid
@@ -414,20 +409,23 @@ label {
 }
 
 .c-artwork {
-  display: block;
+  display: flex;
+  flex-direction: column;
   break-inside: avoid; /* Prevent items from breaking across columns */
   margin-bottom: var(--global-whitespace-lg);
   grid-row-end: span 10; /* Ensure that grid items take up the appropriate height */
 }
 
-.c-artwork img {
+/* .c-artwork img {
   width: 100%;
   height: auto;
-  object-fit: contain; /* Keep aspect ratio of the images */
+  object-fit: contain;
   margin-bottom: var(--global-whitespace-xs);
-}
+} */
 
 .c-artwork canvas {
+  cursor: pointer;
+  order: 1;
   width: 100%;
   height: auto;
   object-fit: contain; /* Keep aspect ratio of the images */
@@ -435,6 +433,7 @@ label {
 }
 
 .c-artwork-title {
+  order: 2;
   color: var(--global-text-color);
   font-size: var(--font-size-lg);
   /* text-align: center; */
@@ -467,4 +466,77 @@ label {
   background-color: var(--global-color-primary-alpha-050);
   outline: none;
   box-shadow: var(--global-input-box-shadow-focus);
+}
+.c-modal.hidden {
+  display: none;
+}
+
+.c-modal.visible {
+  /* position: absolute; */
+  overflow-y: scroll;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.modal-content {
+  display: flex;
+  /* flex-wrap: wrap; */
+  flex-flow: column;
+  transition: all 0.5s ease;
+  width: 100%;
+  /* background: var(--global-background-color); */
+  color: var(--global-text-color);
+  padding: var(--global-whitespace-md);
+  border-radius: var(--global-border-radius);
+  max-width: 700px;
+  text-align: left;
+  display: flex;
+  gap: var(--global-whitespace-lg);
+}
+
+.modal-img canvas {
+  width: 300px;
+  /* height: auto; */
+  border-radius: 8px;
+}
+.modal-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-details h2 {
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--global-whitespace-md);
+}
+
+.modal-details p {
+  font-size: var(--font-size-base);
+  margin-bottom: var(--global-whitespace-sm);
+}
+
+.modal-details p:first-of-type {
+  font-weight: bold;
+}
+
+.modal-details p:last-of-type {
+  color: var(--global-color-secondary-alpha-075);
+}
+
+@media (min-width: 768px) {
+  .c-header__swatches {
+    order: 3;
+  }
+  .modal-content {
+    flex-flow: row;
+  }
 }
