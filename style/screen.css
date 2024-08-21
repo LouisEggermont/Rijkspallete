@@ -331,7 +331,7 @@ label {
 
 .c-header .c-header__title {
   font-weight: 400;
-  font-size: var(--font-size-7xl);
+  font-size: var(--font-size-5xl);
   margin: var(--global-whitespace-md) 0;
 }
 
@@ -357,12 +357,13 @@ label {
 }
 
 .c-option--hidden:checked + .c-custom-option__label {
-  border: 4px solid white;
+  /* border: 4px solid var(--global-color-secondary); */
+  /* box-shadow: var(--global-input-box-shadow-focus); */
 }
 
 .c-option--hidden:focus + .c-custom-option__label {
   /* outline: 2px solid var(--global-color-secondary); Visible focus indicator */
-  border: 4px solid white;
+  border: 4px solid var(--global-color-secondary);
 }
 
 /* Optional: Custom scrollbar styling for WebKit browsers (Chrome, Safari) */
@@ -373,6 +374,42 @@ label {
 .c-header__swatches::-webkit-scrollbar-thumb {
   background-color: var(--global-border-color-soft);
   border-radius: 4px; /* Round the scrollbar thumb */
+}
+
+.c-header__swatch {
+  position: relative;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+  padding-top: 6px;
+}
+
+.c-option--hidden:checked + .c-custom-option__label::after {
+  content: "";
+  position: absolute;
+  bottom: -4px; /* Plaatsing van de streep onder de swatch */
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--global-text-color); /* Kleur van de streep */
+  transition: transform 0.3s ease;
+  transform: scaleX(1); /* Animatie */
+  transform-origin: center;
+}
+
+.c-option--hidden + .c-custom-option__label::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--global-text-color);
+  transform: scaleX(0); /* Streep onzichtbaar bij niet geselecteerde swatch */
+  transform-origin: center;
+}
+
+.c-option--hidden:checked + .c-custom-option__label::after {
+  transform: scaleX(1); /* Streep zichtbaar bij geselecteerde swatch */
 }
 
 /* Style the select dropdown */
@@ -506,6 +543,25 @@ label {
   background-color: var(--global-color-primary-alpha-050);
   outline: none;
   box-shadow: var(--global-input-box-shadow-focus);
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-10px);
+  }
+  40%,
+  80% {
+    transform: translateX(10px);
+  }
+}
+
+.c-button.shake {
+  animation: shake 0.4s ease-in-out;
 }
 
 .c-modal.visible {
@@ -713,5 +769,13 @@ label {
     flex-direction: row-reverse;
     /* flex-direction: column;
     justify-content: end; */
+  }
+  .c-header .c-header__title {
+    font-size: var(--font-size-7xl);
+  }
+}
+@media (min-width: 576px) {
+  .c-header .c-header__title {
+    font-size: var(--font-size-7xl);
   }
 }

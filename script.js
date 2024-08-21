@@ -36,14 +36,16 @@ document.getElementById("time-period").addEventListener("change", function () {
 });
 
 function fetchArtworksByColor(hexColor, replace = false) {
-  const apiKey = "sNp968L7"; // Replace with your actual API key
-  const url = `https://www.rijksmuseum.nl/api/en/collection?key=${apiKey}&format=json&f.normalized32Colors.hex=%23${hexColor}&imgonly=True&p=${currentPage}&ps=10`;
+  const url = `https://www.rijksmuseum.nl/api/en/collection?key=${Sleutel}&format=json&f.normalized32Colors.hex=%23${hexColor}&imgonly=True&p=${currentPage}&ps=10`;
 
   showLoading();
 
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
+      if (data.artObjects.length === 0) {
+        shakeButton();
+      }
       displayArtworks(data.artObjects, replace);
       hideLoading();
     })
@@ -54,12 +56,14 @@ function fetchArtworksByColor(hexColor, replace = false) {
 }
 
 function fetchArtworksByPeriodAndColor(period, hexColor, replace = false) {
-  const apiKey = "sNp968L7"; // Replace with your actual API key
-  const url = `https://www.rijksmuseum.nl/api/en/collection?key=${apiKey}&format=json&f.dating.period=${period}&f.normalized32Colors.hex=%23${hexColor}&imgonly=True&p=${currentPage}&ps=10`;
+  const url = `https://www.rijksmuseum.nl/api/en/collection?key=${Sleutel}&format=json&f.dating.period=${period}&f.normalized32Colors.hex=%23${hexColor}&imgonly=True&p=${currentPage}&ps=10`;
   showLoading();
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
+      if (data.artObjects.length === 0) {
+        shakeButton();
+      }
       displayArtworks(data.artObjects, replace);
       hideLoading();
     })
@@ -68,9 +72,17 @@ function fetchArtworksByPeriodAndColor(period, hexColor, replace = false) {
     );
 }
 
+function shakeButton() {
+  const loadMoreButton = document.getElementById("load-more");
+  loadMoreButton.classList.add("shake");
+  setTimeout(() => {
+    loadMoreButton.classList.remove("shake");
+  }, 400);
+}
+const Sleutel = "sNp968L7";
+
 function fetchArtworkDetails(objectNumber, image) {
-  const apiKey = "sNp968L7"; // Replace with your actual API key
-  const url = `https://www.rijksmuseum.nl/api/en/collection/${objectNumber}?key=${apiKey}&format=json`;
+  const url = `https://www.rijksmuseum.nl/api/en/collection/${objectNumber}?key=${Sleutel}&format=json`;
 
   fetch(url)
     .then((response) => response.json())
