@@ -11,8 +11,6 @@
   <body>
     <div class="c-header">
       <h1 class="c-header__title">RijksPallete</h1>
-      <label for="apply-filter">Apply Color Filter:</label>
-      <input type="checkbox" id="apply-filter" />
       <ul class="c-header__swatches">
         <!-- only one artwork with this color and it has no picture -->
         <!-- <li class="c-header__swatch">
@@ -338,32 +336,36 @@
           ></label>
         </li>
       </ul>
-      <div class="c-time-filter">
-        <label for="time-period">Filter on time period:</label>
-        <select id="time-period">
-          <option selected="true" value="0">Select time period</option>
-          <option value="17">17th Century</option>
-          <option value="18">18th Century</option>
-          <option value="19">19th Century</option>
-          <option value="20">20nd Century</option>
-          <option value="21">21st Century</option>
-        </select>
+      <div class="c-header__options">
+        <div class="c-time-filter">
+          <label for="time-period">Filter on time period:</label>
+          <select id="time-period">
+            <option selected="true" value="0">Select time period</option>
+            <option value="17">17th Century</option>
+            <option value="18">18th Century</option>
+            <option value="19">19th Century</option>
+            <option value="20">20nd Century</option>
+            <option value="21">21st Century</option>
+          </select>
+        </div>
+        <div class="toggle-list__item">
+          <input
+            type="checkbox"
+            id="apply-filter"
+            class="o-hide-accessible option option--hidden"
+          />
+          <label for="apply-filter" class="custom-toggle">
+            <span class="custom-toggle__label">Apply Color Filter:</span>
+            <span class="custom-toggle__fake-input"></span>
+          </label>
+        </div>
       </div>
 
       <!-- <canvas id="colorChart" width="400" height="400"></canvas> -->
       <!-- <canvas id="filteredArtwork" width="500" height="400"></canvas> -->
     </div>
     <div id="artwork-container" class="c-artwork-container">
-      <div class="c-artwork" data-object-number="SK-C-5" id="thumb1">
-        <img
-          data-thumbID="thumb1"
-          src="https://lh3.googleusercontent.com/J-mxAE7CPu-DXIOx4QKBtb0GC4ud37da1QK7CzbTIDswmvZHXhLm4Tv2-1H3iBXJWAW_bHm7dMl3j5wv_XiWAg55VOM=w100"
-          alt="De Nachtwacht"
-          class="artwork-thumbnail thumbnail"
-          view-transition-name="artwork-image"
-        />
-        <p class="c-artwork-title">De Nachtwacht</p>
-      </div>
+      <div class="c-artwork" data-object-number="SK-C-5" id="thumb1"></div>
     </div>
     <div class="c-row c-row--button">
       <button id="load-more" class="c-button o-button-reset">Load More</button>
@@ -373,7 +375,6 @@
       <div class="modal-content">
         <figure class="modal-img"></figure>
         <div class="modal-details">
-          cdcdcd
           <canvas id="colorChart" width="400" height="400"></canvas>
         </div>
       </div>

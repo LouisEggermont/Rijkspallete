@@ -31,7 +31,7 @@ document.getElementById("time-period").addEventListener("change", function () {
   if (currentPeriod == 0) {
     fetchArtworksByColor(selectedColor, true);
   } else {
-    fetchArtworksByPeriodAndColor(currentPeriodd, selectedColor);
+    fetchArtworksByPeriodAndColor(currentPeriod, selectedColor, true);
   }
 });
 
@@ -101,25 +101,32 @@ function displayArtworks(artworks, replace = false) {
   if (replace) container.innerHTML = "";
 
   artworks.forEach((artwork) => {
-    const artworkDiv = document.createElement("div");
-    artworkDiv.classList.add("c-artwork");
-    artworkDiv.setAttribute("id", artwork.objectNumber);
+    const button = document.createElement("button");
+    button.classList.add("c-artwork");
+    button.setAttribute("id", artwork.objectNumber);
+    button.setAttribute("aria-label", `View details of ${artwork.title}`);
+    button.addEventListener("click", () =>
+      handleImageClick(button.querySelector("canvas"))
+    );
+    button.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        handleImageClick(button.querySelector("canvas"));
+      }
+    });
 
     const canvas = document.createElement("canvas");
-    canvas.classList.add("filtered-artwork");
-    canvas.classList.add("artwork-thumbnail", "thumbnail");
+    canvas.classList.add("filtered-artwork", "artwork-thumbnail", "thumbnail");
     canvas.setAttribute("data-thumbID", artwork.objectNumber);
     canvas.setAttribute("view-transition-name", "artwork-image");
-    artworkDiv.appendChild(canvas);
 
     const title = document.createElement("p");
     title.classList.add("c-artwork-title");
     title.textContent = artwork.title;
 
-    artworkDiv.appendChild(title);
-    container.appendChild(artworkDiv);
-
-    canvas.addEventListener("click", () => handleImageClick(canvas));
+    button.appendChild(canvas);
+    button.appendChild(title);
+    button.classList.add("o-button-reset");
+    container.appendChild(button);
 
     if (applyFilter) {
       applySingleColorFilter(
@@ -329,16 +336,6 @@ function openModal(image) {
   modal.classList.remove("hidden");
 }
 
-modal.addEventListener("click", (e) => {
-  if (e.target.classList.contains("modal")) {
-    const image = modalImgContainer.querySelector("img");
-
-    document.startViewTransition(() => {
-      closeModal(image);
-    });
-  }
-});
-
 function closeModal(image) {
   const galleryParentID = image.getAttribute("data-thumbID");
   const galleryParent = document.getElementById(galleryParentID);
@@ -361,6 +358,18 @@ function closeModal(image) {
 
 document.querySelector(".modal").addEventListener("click", (e) => {
   if (e.target.classList.contains("modal")) {
+    const image = document.querySelector(".modal-img canvas");
+    document.startViewTransition(() => {
+      closeModal(image);
+    });
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (
+    e.key === "Escape" &&
+    document.querySelector(".modal").classList.contains("visible")
+  ) {
     const image = document.querySelector(".modal-img canvas");
     document.startViewTransition(() => {
       closeModal(image);

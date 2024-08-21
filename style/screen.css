@@ -65,6 +65,9 @@
   --global-input-box-shadow-focus: 0 0 0 2px
     var(--global-input-box-shadow-focus-color);
 
+  --global-transition-duration: 150ms;
+  --global-transition-ease: cubic-bezier(0.25, 0.8, 0.25, 1);
+
   font-family: Georgia, serif;
 
   --font-size-7xl: 4.5rem; /* 72pt */
@@ -307,6 +310,7 @@ label {
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
+  opacity: 0;
 }
 /*------------------------------------*\
     #COMPONENTS
@@ -319,6 +323,7 @@ label {
 .c-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: var(--global-whitespace-lg);
   padding: var(--global-whitespace-lg);
@@ -346,9 +351,17 @@ label {
   width: 2rem; /* Adjust the width as needed */
   height: 2rem; /* Adjust the height as needed */
   flex: 0 0 auto; /* Prevent the swatches from shrinking or growing */
+  cursor: pointer;
+  transition: all var(--global-transition-duration)
+    var(--global-transition-ease);
 }
 
 .c-option--hidden:checked + .c-custom-option__label {
+  /* border: 2px solid white; */
+}
+
+.c-option--hidden:focus + .c-custom-option__label {
+  /* outline: 2px solid var(--global-color-secondary); Visible focus indicator */
   border: 4px solid white;
 }
 
@@ -364,6 +377,29 @@ label {
 
 /* Style the select dropdown */
 
+.c-header__options {
+  align-items: center;
+  display: flex;
+  /* flex-flow: column; */
+  /* flex-direction: row-reverse; */
+  flex-wrap: wrap;
+  gap: var(--global-whitespace-lg);
+  /* padding: var(--global-whitespace-lg); */
+}
+
+.c-time-filter {
+  display: flex;
+  /* flex-direction: column; */
+  align-items: center;
+  gap: var(--global-whitespace-sm);
+}
+
+.c-time-filter label {
+  /* color: var(--global-text-color);
+  font-size: var(--font-size-base); */
+  width: 100%;
+}
+
 .c-time-filter select {
   background-color: var(--global-input-background-color);
   border: var(--global-input-border-width) solid
@@ -376,7 +412,8 @@ label {
   color: var(--global-text-color);
   width: 100%; /* Make the select take the full width */
   max-width: 300px; /* Optionally set a max-width */
-  transition: border-color 0.3s ease;
+  transition: all var(--global-transition-duration)
+    var(--global-transition-ease);
 }
 
 /* Style the select on hover */
@@ -456,6 +493,8 @@ label {
   border-radius: var(--global-input-border-radius);
   border: var(--global-input-border-width) solid
     var(--global-input-border-color);
+  transition: all var(--global-transition-duration)
+    var(--global-transition-ease);
 }
 
 .c-button:hover {
@@ -563,11 +602,79 @@ label {
   color: var(--global-color-secondary-alpha-075); /* Linkkleur bij hover */
 }
 
+/* Custom Toggle Styling */
+.custom-toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.custom-toggle__label {
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  color: var(--global-text-color);
+}
+
+.custom-toggle__fake-input {
+  display: inline-block;
+  width: 2rem;
+  height: 1rem;
+  border-radius: var(--global-border-radius);
+  background-color: var(--global-input-background-color);
+  position: relative;
+  transition: all var(--global-transition-duration)
+    var(--global-transition-ease);
+}
+
+.custom-toggle__fake-input::after {
+  content: "";
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  background-color: var(--global-color-neutral-0);
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all var(--global-transition-duration)
+    var(--global-transition-ease);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.option--hidden:checked + .custom-toggle .custom-toggle__fake-input {
+  background-color: var(--global-input-background-color);
+}
+
+.option--hidden:checked + .custom-toggle .custom-toggle__fake-input::after {
+  transform: translateX(1rem);
+}
+
+/* Focus State */
+.option--hidden:focus + .custom-toggle .custom-toggle__fake-input {
+  box-shadow: 0 0 0 3px var(--global-color-secondary-alpha-025);
+}
+
+/* Active State */
+.option--hidden:active + .custom-toggle .custom-toggle__fake-input::after {
+  transform: scale(0.9) translateX(1rem);
+}
+
+.option--hidden:active:checked
+  + .custom-toggle
+  .custom-toggle__fake-input::after {
+  transform: scale(0.9) translateX(0);
+}
+
 @media (min-width: 768px) {
   .c-header__swatches {
     order: 3;
   }
   .modal-content {
     flex-flow: row;
+  }
+  .c-header__options {
+    flex-direction: row-reverse;
+    /* flex-direction: column;
+    justify-content: end; */
   }
 }
