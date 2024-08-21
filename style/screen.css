@@ -9,6 +9,7 @@
   --global-color-primary-alpha-050: hsla(var(--global-color-primary-hsl), 0.5);
 
   --global-color-secondary: #f9e9a8;
+  --global-color-secondary-alpha-025: hsla(48, 87%, 82%, 0.25);
 
   --global-color-neutral-1000: #530b0e;
   --global-color-neutral-900: #6d1b1d;
@@ -57,7 +58,9 @@
   --global-input-border-radius: var(--global-border-radius-sm);
   --global-input-border-width: var(--global-border-width);
   --global-input-border-color-focus: var(--global-accent-color);
-  --global-input-box-shadow-focus-color: var(--global-color-primary-alpha-025);
+  --global-input-box-shadow-focus-color: var(
+    --global-color-secondary-alpha-025
+  );
   --global-input-box-shadow-focus: 0 0 0 2px
     var(--global-input-box-shadow-focus-color);
 
@@ -435,4 +438,33 @@ label {
   color: var(--global-text-color);
   font-size: var(--font-size-lg);
   /* text-align: center; */
+}
+
+.c-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--global-whitespace-lg);
+  padding: var(--global-whitespace-lg);
+}
+
+.c-row--button {
+  justify-content: center;
+}
+
+.c-button {
+  background-color: var(--global-input-background-color);
+  padding: var(--global-whitespace-md);
+  border-radius: var(--global-input-border-radius);
+  border: var(--global-input-border-width) solid
+    var(--global-input-border-color);
+}
+
+.c-button:hover {
+  background-color: var(--global-color-primary-alpha-025);
+}
+
+.c-button:focus {
+  background-color: var(--global-color-primary-alpha-050);
+  outline: none;
+  box-shadow: var(--global-input-box-shadow-focus);
 }

@@ -10,7 +10,7 @@ document.getElementById("apply-filter").addEventListener("change", function () {
   resizeAllGridItems();
 
   currentPage = 1;
-  fetchArtworksByColor(selectedColor);
+  fetchArtworksByColor(selectedColor, true);
 });
 
 document.querySelectorAll(".c-option--hidden").forEach((input) => {
@@ -18,7 +18,7 @@ document.querySelectorAll(".c-option--hidden").forEach((input) => {
     if (this.checked) {
       selectedColor = this.getAttribute("data-color").substring(1);
       currentPage = 1;
-      fetchArtworksByColor(selectedColor);
+      fetchArtworksByColor(selectedColor, true);
       console.log("Selected Color:", selectedColor); // Debug log
     }
   });
