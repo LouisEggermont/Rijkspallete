@@ -506,9 +506,6 @@ label {
   outline: none;
   box-shadow: var(--global-input-box-shadow-focus);
 }
-.c-modal.hidden {
-  display: none;
-}
 
 .c-modal.visible {
   /* position: absolute; */
@@ -663,6 +660,45 @@ label {
   + .custom-toggle
   .custom-toggle__fake-input::after {
   transform: scale(0.9) translateX(0);
+}
+
+.loading-overlay {
+  opacity: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: opacity 1s ease-in-out;
+  -moz-transition: opacity 1s ease-in-out;
+  -webkit-transition: opacity 1s ease-in-out;
+}
+
+.spinner {
+  border: 8px solid var(--global-color-primary);
+  border-top: 8px solid var(--global-color-secondary);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+.hidden {
+  display: none;
+  opacity: 0;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @media (min-width: 768px) {

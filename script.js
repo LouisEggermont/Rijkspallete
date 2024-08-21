@@ -39,26 +39,33 @@ function fetchArtworksByColor(hexColor, replace = false) {
   const apiKey = "sNp968L7"; // Replace with your actual API key
   const url = `https://www.rijksmuseum.nl/api/en/collection?key=${apiKey}&format=json&f.normalized32Colors.hex=%23${hexColor}&imgonly=True&p=${currentPage}&ps=10`;
 
+  showLoading();
+
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
       displayArtworks(data.artObjects, replace);
+      hideLoading();
     })
     .catch((error) => {
       console.error("Error fetching artworks:", error);
+      hideLoading();
     });
 }
 
 function fetchArtworksByPeriodAndColor(period, hexColor, replace = false) {
   const apiKey = "sNp968L7"; // Replace with your actual API key
   const url = `https://www.rijksmuseum.nl/api/en/collection?key=${apiKey}&format=json&f.dating.period=${period}&f.normalized32Colors.hex=%23${hexColor}&imgonly=True&p=${currentPage}&ps=10`;
-
+  showLoading();
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
       displayArtworks(data.artObjects, replace);
+      hideLoading();
     })
-    .catch((error) => console.error("Error fetching artworks:", error));
+    .catch((error) =>
+      console.error("Error fetching artworks:", error).then(() => hideLoading())
+    );
 }
 
 function fetchArtworkDetails(objectNumber, image) {
@@ -409,4 +416,12 @@ function createColorChart(colors, percentages) {
       },
     },
   });
+}
+
+function showLoading() {
+  document.getElementById("loading-overlay").classList.remove("hidden");
+}
+
+function hideLoading() {
+  document.getElementById("loading-overlay").classList.add("hidden");
 }
