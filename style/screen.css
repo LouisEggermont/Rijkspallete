@@ -476,7 +476,7 @@ label {
   display: grid;
   grid-template-columns: repeat(
     auto-fill,
-    minmax(200px, 1fr)
+    minmax(300px, 1fr)
   ); /* Flexible grid columns */
   grid-auto-rows: 10px; /* Base height for rows */
   gap: var(--global-whitespace-lg); /* Space between grid items */
@@ -760,6 +760,12 @@ label {
 }
 
 @media (min-width: 768px) {
+  .c-header {
+    padding: var(--global-whitespace-lg) var(--global-whitespace-xxl);
+  }
+  .c-artwork-container {
+    padding: 0 var(--global-whitespace-xxl);
+  }
   .c-header__swatches {
     order: 3;
   }
