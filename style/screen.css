@@ -8,6 +8,8 @@
   --global-color-primary-alpha-025: hsla(var(--global-color-primary-hsl), 0.25);
   --global-color-primary-alpha-050: hsla(var(--global-color-primary-hsl), 0.5);
 
+  --global-color-secondary: #f9e9a8;
+
   --global-color-neutral-1000: #530b0e;
   --global-color-neutral-900: #6d1b1d;
   --global-color-neutral-800: #872a2e;
@@ -22,7 +24,7 @@
   --global-color-neutral-25: #fef4f4;
   --global-color-neutral-0: #fff;
 
-  --global-text-color: #f9e9a8;
+  --global-text-color: var(--global-color-secondary);
   --global-text-color-soft: var(--global-color-neutral-200);
   --global-text-color-meta: var(--global-color-neutral-500);
   --global-background-color: #530b0e;
@@ -49,8 +51,8 @@
   --global-label-color: var(--global-text-color-soft);
   --global-placeholder-color: var(--global-text-color-meta);
   --global-input-color: var(--global-text-color-soft);
-  --global-input-background-color: var(--global-front-color);
-  --global-input-border-color: var(--global-border-color-soft);
+  --global-input-background-color: var(--global-color-neutral-900);
+  --global-input-border-color: var(--global-color-secondary);
   --global-input-border-color-hover: var(--global-border-color);
   --global-input-border-radius: var(--global-border-radius-sm);
   --global-input-border-width: var(--global-border-width);
@@ -160,7 +162,7 @@ h1 {
   font-size: 2.25rem;
   font-weight: 700;
   line-height: 2rem;
-  margin-bottom: 1.5rem;
+  /* margin-bottom: 1.5rem; */
 }
 
 h2 {
@@ -292,6 +294,16 @@ label {
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
+
+.o-hide-accessible--radio {
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
 /*------------------------------------*\
     #COMPONENTS
   \*------------------------------------*/
@@ -301,43 +313,34 @@ label {
   */
 
 .c-header {
-  /* display: grid; */
-  /* grid-template-columns: auto 1fr; */
-  /* gap: var(--global-whitespace-lg); */
-  /* flex-direction: row; */
-  /* justify-content: space-between; */
-  /* align-items: center; */
-  /* padding: var(--global-whitespace-lg) var(--global-whitespace-xxl); */
   display: flex;
-  /* flex-direction: column; */
+  align-items: center;
   flex-wrap: wrap;
+  gap: var(--global-whitespace-lg);
+  padding: var(--global-whitespace-lg);
 }
 
-.c-header__title {
-  /* font-size: 0.5rem; */
-  /* font-size: var(--global-size-md); */
+.c-header .c-header__title {
   font-weight: 400;
   font-size: var(--font-size-7xl);
-  /* color: green; */
-  /* line-height: 3rem; */
+  margin: var(--global-whitespace-md) 0;
 }
 
 .c-header__swatches {
   display: flex;
-  flex-wrap: nowrap; /* Ensure the swatches don't wrap onto new lines */
+  flex-wrap: nowrap; /* Prevent wrapping */
   gap: var(--global-whitespace-md);
-  overflow-x: auto; /* Enable horizontal scrolling */
-  padding-bottom: var(
-    --global-whitespace-xs
-  ); /* Optional: Add some padding to prevent the scrollbar from overlapping the content */
-  scrollbar-width: thin; /* Firefox: Make the scrollbar thinner */
-  scrollbar-color: var(--global-border-color-soft) transparent; /* Firefox: Custom scrollbar color */
+  overflow-x: auto; /* Allow horizontal scroll */
+  /* padding: var(--global-whitespace-) 0; */
+  scrollbar-width: thin;
+  scrollbar-color: var(--global-border-color-soft) transparent; /* Scrollbar color for Firefox */
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
 }
 
 .c-custom-option__label {
   width: 2rem; /* Adjust the width as needed */
   height: 2rem; /* Adjust the height as needed */
-  /* background-color: green; */
   flex: 0 0 auto; /* Prevent the swatches from shrinking or growing */
 }
 
@@ -355,26 +358,74 @@ label {
   border-radius: 4px; /* Round the scrollbar thumb */
 }
 
-/* Add your existing styles here */
+/* Style the select dropdown */
+
+@media (min-width: 768px) {
+  .c-header__swatches {
+    order: 3;
+  }
+}
+
+.c-time-filter select {
+  background-color: var(--global-input-background-color);
+  border: var(--global-input-border-width) solid
+    var(--global-input-border-color);
+  /* outline: green; */
+  border-radius: var(--global-input-border-radius);
+  margin-top: var(--global-whitespace-sm);
+  padding: 0.5rem; /* Add padding inside the select */
+  font-size: var(--font-size-base);
+  color: var(--global-text-color);
+  width: 100%; /* Make the select take the full width */
+  max-width: 300px; /* Optionally set a max-width */
+  transition: border-color 0.3s ease;
+}
+
+/* Style the select on hover */
+.c-time-filter select:hover {
+  /* border-color: var(--global-input-border-color-hover); */
+}
+
+/* Style the select on focus */
+.c-time-filter select:focus {
+  /* border-color: var(--global-input-border-color-focus); */
+  box-shadow: var(--global-input-box-shadow-focus);
+  outline: none;
+}
+
+/* Style the select options */
+.c-time-filter select option {
+  background-color: var(--global-input-background-color);
+  color: var(--global-text-color);
+}
 
 .c-artwork-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--global-whitespace-lg);
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(300px, 1fr)
+  ); /* Flexible grid columns */
+  grid-auto-rows: 10px; /* Base height for rows */
+  gap: var(--global-whitespace-lg); /* Space between grid items */
   padding: var(--global-whitespace-lg);
 }
 
 .c-artwork {
-  text-align: center;
+  display: block;
+  break-inside: avoid; /* Prevent items from breaking across columns */
+  margin-bottom: var(--global-whitespace-lg);
+  grid-row-end: span 10; /* Ensure that grid items take up the appropriate height */
 }
 
 .c-artwork img {
-  max-width: 100%;
-  /* border-radius: var(--global-border-radius); */
+  width: 100%;
+  height: auto;
+  object-fit: contain; /* Keep aspect ratio of the images */
+  margin-bottom: var(--global-whitespace-xs);
 }
 
 .c-artwork-title {
-  margin-top: var(--global-whitespace-xs);
   color: var(--global-text-color);
   font-size: var(--font-size-lg);
+  text-align: center;
 }

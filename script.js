@@ -5,11 +5,6 @@ document.querySelectorAll(".c-option--hidden").forEach((input) => {
   input.addEventListener("change", function () {
     console.log("Input changed:", this); // Debug log
     if (this.checked) {
-      const label = this.nextElementSibling;
-      const bgColor = window.getComputedStyle(label).backgroundColor;
-      const borderColor = getContrastColor(bgColor);
-      label.style.border = `4px solid ${borderColor}`;
-
       selectedColor = this.getAttribute("data-color").substring(1);
       console.log("Selected color:", selectedColor);
       fetchArtworksByColor(selectedColor);
@@ -20,7 +15,11 @@ document.querySelectorAll(".c-option--hidden").forEach((input) => {
 document.getElementById("time-period").addEventListener("change", function () {
   const selectedPeriod = this.value;
   console.log("Selected period:", selectedPeriod); // Debug log
-  fetchArtworksByPeriodAndColor(selectedPeriod, selectedColor);
+  if (selectedPeriod == 0) {
+    fetchArtworksByColor(selectedColor);
+  } else {
+    fetchArtworksByPeriodAndColor(selectedPeriod, selectedColor);
+  }
 });
 
 function getContrastColor(bgColor) {
@@ -77,10 +76,6 @@ function displayArtworks(artworks) {
   const container = document.getElementById("artwork-container");
   container.innerHTML = ""; // Clear previous results
 
-  // const colorDistribution = calculateColorDistribution(artworks);
-
-  // visualizeColorDistribution(colorDistribution);
-
   artworks.forEach((artwork) => {
     const artworkDiv = document.createElement("div");
     artworkDiv.classList.add("c-artwork");
@@ -97,82 +92,51 @@ function displayArtworks(artworks) {
     artworkDiv.appendChild(title);
     container.appendChild(artworkDiv);
   });
+
+  // Zorg ervoor dat de grid-items goed passen
+  imagesLoaded(container, resizeAllGridItems);
 }
 
-// function calculateColorDistribution(artworks) {
-//   const colorMap = {};
-//   artworks.forEach((artwork) => {
-//     if (artwork.colors && Array.isArray(artwork.colors)) {
-//       artwork.colors.forEach((color) => {
-//         colorMap[color] = (colorMap[color] || 0) + 1;
-//       });
-//     } else {
-//       console.warn("Artwork has no colors or colors is not an array:", artwork); // Debug log
-//     }
-//   });
-//   return colorMap;
-// }
+function resizeAllGridItems() {
+  const allItems = document.querySelectorAll(".c-artwork");
+  allItems.forEach((item) => {
+    resizeGridItem(item);
+  });
+}
 
-// function visualizeColorDistribution(colorMap) {
-//   const ctx = document
-//     .getElementById("colorDistributionChart")
-//     .getContext("2d");
-//   new Chart(ctx, {
-//     type: "pie",
-//     data: {
-//       labels: Object.keys(colorMap),
-//       datasets: [
-//         {
-//           data: Object.values(colorMap),
-//           backgroundColor: Object.keys(colorMap),
-//         },
-//       ],
-//     },
-//     options: {
-//       responsive: true,
-//       plugins: {
-//         legend: {
-//           position: "top",
-//         },
-//         tooltip: {
-//           callbacks: {
-//             label: function (tooltipItem) {
-//               return `${tooltipItem.label}: ${tooltipItem.raw}`;
-//             },
-//           },
-//         },
-//       },
-//     },
-//   });
-// }
-function createColorChart(colors, percentages) {
-  const ctx = document.getElementById("colorChart").getContext("2d");
-  new Chart(ctx, {
-    type: "doughnut",
-    data: {
-      labels: colors, // Kleuren als labels
-      datasets: [
-        {
-          data: percentages, // Percentage per kleur
-          backgroundColor: colors, // Kleuren gebruiken als achtergrondkleur
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: "bottom",
-        },
-        tooltip: {
-          callbacks: {
-            label: function (tooltipItem) {
-              return `${tooltipItem.label}: ${tooltipItem.raw}%`;
-            },
-          },
-        },
-      },
-    },
+function resizeGridItem(item) {
+  const grid = document.querySelector(".c-artwork-container");
+  const rowHeight = parseInt(
+    window.getComputedStyle(grid).getPropertyValue("grid-auto-rows")
+  );
+  const rowGap = parseInt(
+    window.getComputedStyle(grid).getPropertyValue("grid-row-gap")
+  );
+  const rowSpan = Math.ceil(
+    (item.querySelector("img").getBoundingClientRect().height +
+      item.querySelector(".c-artwork-title").getBoundingClientRect().height +
+      rowGap) /
+      (rowHeight + rowGap)
+  );
+  item.style.gridRowEnd = "span " + rowSpan;
+}
+
+window.addEventListener("resize", resizeAllGridItems);
+
+function imagesLoaded(container, callback) {
+  const images = container.querySelectorAll("img");
+  let loaded = 0;
+
+  images.forEach((image) => {
+    if (image.complete) {
+      loaded++;
+      if (loaded === images.length) callback();
+    } else {
+      image.addEventListener("load", () => {
+        loaded++;
+        if (loaded === images.length) callback();
+      });
+    }
   });
 }
 
@@ -212,7 +176,6 @@ function applyColorFilter(imageUrl, allowedColors, tolerance = 30) {
       }
 
       if (!matchFound) {
-        // Dim non-matching colors (e.g., convert to grayscale)
         const avg = (r + g + b) / 3;
         data[i] = avg; // Red
         data[i + 1] = avg; // Green
@@ -234,7 +197,7 @@ function hexToRgb(hex) {
 }
 
 // Test de functie met een afbeelding en kleuren
-const allowedColors = ["#261808", "#3E2A1C", "#595145"]; // Top 3 dominante kleuren
+const allowedColors = ["#261808", "#3E2A1C", "#595145"];
 applyColorFilter(
   "https://lh3.googleusercontent.com/SsEIJWka3_cYRXXSE8VD3XNOgtOxoZhqW1uB6UFj78eg8gq3G4jAqL4Z_5KwA12aD7Leqp27F653aBkYkRBkEQyeKxfaZPyDx0O8CzWg=w800",
   allowedColors

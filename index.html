@@ -11,49 +11,34 @@
   <body>
     <div class="c-header">
       <h1 class="c-header__title">RijksPallete</h1>
-      <div class="c-time-filter">
-        <label for="time-period">Choose a time period:</label>
-        <select id="time-period">
-          <option selected="true" disabled="disabled">
-            Choose time period
-          </option>
-          <option value="17">17th Century</option>
-          <option value="18">18th Century</option>
-          <option value="19">19th Century</option>
-          <option value="20">20nd Century</option>
-          <option value="21">21st Century</option>
-        </select>
-        <!-- <canvas id="colorDistributionChart"></canvas> -->
-        <canvas id="colorChart" width="400" height="400"></canvas>
-        <canvas id="filteredArtwork" width="500" height="400"></canvas>
-      </div>
       <ul class="c-header__swatches">
-        <li class="c-header__swatch">
+        <!-- only one artwork with this color and it has no picture -->
+        <!-- <li class="c-header__swatch">
           <input
             type="radio"
             id="swatch-1"
             name="color"
-            class="o-hide-accessible c-option c-option--hidden"
-            data-color="#4279DB"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#FFEB00"
           />
           <label
             for="swatch-1"
             class="c-custom-option__label"
-            style="background-color: #4279db"
+            style="background-color: #ffeb00"
           ></label>
-        </li>
+        </li> -->
         <li class="c-header__swatch">
           <input
             type="radio"
             id="swatch-2"
             name="color"
-            class="o-hide-accessible c-option c-option--hidden"
-            data-color="#F6ECF3"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#E09714"
           />
           <label
             for="swatch-2"
             class="c-custom-option__label"
-            style="background-color: #f6ecf3"
+            style="background-color: #e09714"
           ></label>
         </li>
         <li class="c-header__swatch">
@@ -61,17 +46,310 @@
             type="radio"
             id="swatch-3"
             name="color"
-            class="o-hide-accessible c-option c-option--hidden"
-            data-color="#b5bfcc"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#B35A1F"
           />
           <label
             for="swatch-3"
             class="c-custom-option__label"
+            style="background-color: #b35a1f"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-4"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#F49B7A"
+          />
+          <label
+            for="swatch-4"
+            class="c-custom-option__label"
+            style="background-color: #f49b7a"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-5"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#DE4153"
+          />
+          <label
+            for="swatch-5"
+            class="c-custom-option__label"
+            style="background-color: #de4153"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-6"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#DF4C93"
+          />
+          <label
+            for="swatch-6"
+            class="c-custom-option__label"
+            style="background-color: #df4c93"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-7"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#981313"
+          />
+          <label
+            for="swatch-7"
+            class="c-custom-option__label"
+            style="background-color: #981313"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-8"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#367614"
+          />
+          <label
+            for="swatch-8"
+            class="c-custom-option__label"
+            style="background-color: #367614"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-9"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#62AD77"
+          />
+          <label
+            for="swatch-9"
+            class="c-custom-option__label"
+            style="background-color: #62ad77"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-10"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#737C84"
+          />
+          <label
+            for="swatch-10"
+            class="c-custom-option__label"
+            style="background-color: #737c84"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-11"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#2F4F4F"
+          />
+          <label
+            for="swatch-11"
+            class="c-custom-option__label"
+            style="background-color: #2f4f4f"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-12"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#000000"
+          />
+          <label
+            for="swatch-12"
+            class="c-custom-option__label"
+            style="background-color: #000000"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-13"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#4019B1"
+          />
+          <label
+            for="swatch-13"
+            class="c-custom-option__label"
+            style="background-color: #4019b1"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-14"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#4279DB"
+          />
+          <label
+            for="swatch-14"
+            class="c-custom-option__label"
+            style="background-color: #4279db"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-15"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#43C6F8"
+          />
+          <label
+            for="swatch-15"
+            class="c-custom-option__label"
+            style="background-color: #43c6f8"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-16"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#850085"
+          />
+          <label
+            for="swatch-16"
+            class="c-custom-option__label"
+            style="background-color: #850085"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-17"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#8268DC"
+          />
+          <label
+            for="swatch-17"
+            class="c-custom-option__label"
+            style="background-color: #8268dc"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-18"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#B5BFCC"
+          />
+          <label
+            for="swatch-18"
+            class="c-custom-option__label"
             style="background-color: #b5bfcc"
           ></label>
         </li>
-        <!-- Add more swatches here -->
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-19"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#C7F2F4"
+          />
+          <label
+            for="swatch-19"
+            class="c-custom-option__label"
+            style="background-color: #c7f2f4"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-20"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#F6ECF3"
+          />
+          <label
+            for="swatch-20"
+            class="c-custom-option__label"
+            style="background-color: #f6ecf3"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-21"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#DDA5AA"
+          />
+          <label
+            for="swatch-21"
+            class="c-custom-option__label"
+            style="background-color: #dda5aa"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-22"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#E0CC91"
+          />
+          <label
+            for="swatch-22"
+            class="c-custom-option__label"
+            style="background-color: #e0cc91"
+          ></label>
+        </li>
+        <li class="c-header__swatch">
+          <input
+            type="radio"
+            id="swatch-23"
+            name="color"
+            class="o-hide-accessible--radio c-option c-option--hidden"
+            data-color="#FBF6E1"
+          />
+          <label
+            for="swatch-23"
+            class="c-custom-option__label"
+            style="background-color: #fbf6e1"
+          ></label>
+        </li>
       </ul>
+      <div class="c-time-filter">
+        <label for="time-period">Filter on time period:</label>
+        <select id="time-period">
+          <option selected="true" value="0">Select time period</option>
+          <option value="17">17th Century</option>
+          <option value="18">18th Century</option>
+          <option value="19">19th Century</option>
+          <option value="20">20nd Century</option>
+          <option value="21">21st Century</option>
+        </select>
+      </div>
+
+      <!-- <canvas id="colorChart" width="400" height="400"></canvas>
+        <canvas id="filteredArtwork" width="500" height="400"></canvas> -->
     </div>
     <div id="artwork-container" class="c-artwork-container"></div>
     <script src="script.js"></script>
