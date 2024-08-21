@@ -1,23 +1,23 @@
 let selectedColor = "E09714"; // Default color
 let applyFilter = false; // Default: Do not apply filter
+let currentPage = 1; // Track the current page
+let currentPeriod = 0;
 
 // Update the filter status when checkbox changes
 document.getElementById("apply-filter").addEventListener("change", function () {
   applyFilter = this.checked;
   console.log("Apply Filter:", applyFilter); // Debug log
   resizeAllGridItems();
-  // Refetch and display artworks with/without filter
-  if (applyFilter) {
-    fetchArtworksByColor(selectedColor);
-  } else {
-    fetchArtworksByColor(selectedColor);
-  }
+
+  currentPage = 1;
+  fetchArtworksByColor(selectedColor);
 });
 
 document.querySelectorAll(".c-option--hidden").forEach((input) => {
   input.addEventListener("change", function () {
     if (this.checked) {
       selectedColor = this.getAttribute("data-color").substring(1);
+      currentPage = 1;
       fetchArtworksByColor(selectedColor);
       console.log("Selected Color:", selectedColor); // Debug log
     }
@@ -25,43 +25,44 @@ document.querySelectorAll(".c-option--hidden").forEach((input) => {
 });
 
 document.getElementById("time-period").addEventListener("change", function () {
-  const selectedPeriod = this.value;
-  if (selectedPeriod == 0) {
-    fetchArtworksByColor(selectedColor);
+  currentPeriod = this.value;
+  currentPage = 1;
+  if (currentPeriod == 0) {
+    fetchArtworksByColor(selectedColor, true);
   } else {
-    fetchArtworksByPeriodAndColor(selectedPeriod, selectedColor);
+    fetchArtworksByPeriodAndColor(currentPeriodd, selectedColor);
   }
 });
 
-function fetchArtworksByColor(hexColor) {
+function fetchArtworksByColor(hexColor, replace = false) {
   const apiKey = "sNp968L7"; // Replace with your actual API key
-  const url = `https://www.rijksmuseum.nl/api/en/collection?key=${apiKey}&format=json&f.normalized32Colors.hex=%23${hexColor}&imgonly=True`;
+  const url = `https://www.rijksmuseum.nl/api/en/collection?key=${apiKey}&format=json&f.normalized32Colors.hex=%23${hexColor}&imgonly=True&p=${currentPage}&ps=10`;
 
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
-      displayArtworks(data.artObjects);
+      displayArtworks(data.artObjects, replace);
     })
     .catch((error) => {
       console.error("Error fetching artworks:", error);
     });
 }
 
-function fetchArtworksByPeriodAndColor(period, hexColor) {
+function fetchArtworksByPeriodAndColor(period, hexColor, replace = false) {
   const apiKey = "sNp968L7"; // Replace with your actual API key
-  const url = `https://www.rijksmuseum.nl/api/en/collection?key=${apiKey}&format=json&f.dating.period=${period}&f.normalized32Colors.hex=%23${hexColor}&imgonly=True`;
+  const url = `https://www.rijksmuseum.nl/api/en/collection?key=${apiKey}&format=json&f.dating.period=${period}&f.normalized32Colors.hex=%23${hexColor}&imgonly=True&p=${currentPage}&ps=10`;
 
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
-      displayArtworks(data.artObjects);
+      displayArtworks(data.artObjects, replace);
     })
     .catch((error) => console.error("Error fetching artworks:", error));
 }
 
-function displayArtworks(artworks) {
+function displayArtworks(artworks, replace = false) {
   const container = document.getElementById("artwork-container");
-  container.innerHTML = ""; // Clear previous results
+  if (replace) container.innerHTML = "";
 
   artworks.forEach((artwork) => {
     const artworkDiv = document.createElement("div");
@@ -201,6 +202,15 @@ function imagesLoaded(container, callback) {
     }
   });
 }
+
+document.getElementById("load-more").addEventListener("click", function () {
+  currentPage++; // Increment the page number
+  if (currentPeriod == 0) {
+    fetchArtworksByColor(selectedColor);
+  } else {
+    fetchArtworksByPeriodAndColor(currentPeriod, selectedColor);
+  }
+});
 
 window.addEventListener("resize", resizeAllGridItems);
 
