@@ -1,5 +1,5 @@
 let selectedColor = "E09714"; // Default color
-let applyFilter = false; // Default: Do not apply filter
+let applyFilter = true; // Default: Do not apply filter
 let currentPage = 1; // Track the current page
 let currentPeriod = 0;
 let colorChartInstance = null;
@@ -128,13 +128,10 @@ function displayArtworks(artworks, replace = false) {
     button.classList.add("o-button-reset");
     container.appendChild(button);
 
+    const resizedImageUrl = artwork.webImage.url.replace("s0", "w500");
+
     if (applyFilter) {
-      applySingleColorFilter(
-        artwork.webImage.url,
-        `#${selectedColor}`,
-        75,
-        canvas
-      );
+      applySingleColorFilter(resizedImageUrl, `#${selectedColor}`, 75, canvas);
     } else {
       const ctx = canvas.getContext("2d");
       const img = new Image();
@@ -145,7 +142,7 @@ function displayArtworks(artworks, replace = false) {
         ctx.drawImage(img, 0, 0);
         resizeAllGridItems(); // Ensure grid items resize correctly
       };
-      img.src = artwork.webImage.url;
+      img.src = resizedImageUrl;
     }
   });
 

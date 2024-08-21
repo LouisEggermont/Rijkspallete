@@ -357,7 +357,7 @@ label {
 }
 
 .c-option--hidden:checked + .c-custom-option__label {
-  /* border: 2px solid white; */
+  border: 4px solid white;
 }
 
 .c-option--hidden:focus + .c-custom-option__label {
