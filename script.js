@@ -1,32 +1,37 @@
-let selectedColor = "000000"; // Default color
+let selectedColor = "E09714"; // Default color
+let applyFilter = false; // Default: Do not apply filter
+
+// Update the filter status when checkbox changes
+document.getElementById("apply-filter").addEventListener("change", function () {
+  applyFilter = this.checked;
+  console.log("Apply Filter:", applyFilter); // Debug log
+  resizeAllGridItems();
+  // Refetch and display artworks with/without filter
+  if (applyFilter) {
+    fetchArtworksByColor(selectedColor);
+  } else {
+    fetchArtworksByColor(selectedColor);
+  }
+});
 
 document.querySelectorAll(".c-option--hidden").forEach((input) => {
-  console.log("Adding event listener to input:", input); // Debug log
   input.addEventListener("change", function () {
-    console.log("Input changed:", this); // Debug log
     if (this.checked) {
       selectedColor = this.getAttribute("data-color").substring(1);
-      console.log("Selected color:", selectedColor);
       fetchArtworksByColor(selectedColor);
+      console.log("Selected Color:", selectedColor); // Debug log
     }
   });
 });
 
 document.getElementById("time-period").addEventListener("change", function () {
   const selectedPeriod = this.value;
-  console.log("Selected period:", selectedPeriod); // Debug log
   if (selectedPeriod == 0) {
     fetchArtworksByColor(selectedColor);
   } else {
     fetchArtworksByPeriodAndColor(selectedPeriod, selectedColor);
   }
 });
-
-function getContrastColor(bgColor) {
-  const rgb = bgColor.match(/\d+/g);
-  const luminance = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255;
-  return luminance > 0.5 ? "black" : "white";
-}
 
 function fetchArtworksByColor(hexColor) {
   const apiKey = "sNp968L7"; // Replace with your actual API key
@@ -35,28 +40,11 @@ function fetchArtworksByColor(hexColor) {
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
-      console.log("Fetched artworks:", data.artObjects); // Debug log
       displayArtworks(data.artObjects);
     })
     .catch((error) => {
       console.error("Error fetching artworks:", error);
     });
-}
-
-function fetchArtworkData(objectNumber) {
-  const apiKey = "sNp968L7"; // Vervang dit door je eigen API-sleutel
-  const url = `https://www.rijksmuseum.nl/api/nl/collection/${objectNumber}?key=${apiKey}`;
-
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
-      const colors = data.artObject.colors.map((color) => color.hex);
-      const percentages = data.artObject.colors.map(
-        (color) => color.percentage
-      );
-      createColorChart(colors, percentages);
-    })
-    .catch((error) => console.error("Error fetching artwork data:", error));
 }
 
 function fetchArtworksByPeriodAndColor(period, hexColor) {
@@ -66,7 +54,6 @@ function fetchArtworksByPeriodAndColor(period, hexColor) {
   fetch(url)
     .then((response) => response.json())
     .then((data) => {
-      console.log("Fetched artworks:", data.artObjects); // Debug log
       displayArtworks(data.artObjects);
     })
     .catch((error) => console.error("Error fetching artworks:", error));
@@ -80,21 +67,96 @@ function displayArtworks(artworks) {
     const artworkDiv = document.createElement("div");
     artworkDiv.classList.add("c-artwork");
 
-    const img = document.createElement("img");
-    img.src = artwork.webImage.url;
-    img.alt = artwork.title;
+    const canvas = document.createElement("canvas");
+    canvas.classList.add("filtered-artwork");
+    artworkDiv.appendChild(canvas);
 
     const title = document.createElement("p");
     title.classList.add("c-artwork-title");
     title.textContent = artwork.title;
 
-    artworkDiv.appendChild(img);
     artworkDiv.appendChild(title);
     container.appendChild(artworkDiv);
+
+    if (applyFilter) {
+      applySingleColorFilter(
+        artwork.webImage.url,
+        `#${selectedColor}`,
+        75,
+        canvas
+      );
+    } else {
+      const ctx = canvas.getContext("2d");
+      const img = new Image();
+      img.crossOrigin = "Anonymous";
+      img.onload = function () {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        resizeAllGridItems(); // Ensure grid items resize correctly
+      };
+      img.src = artwork.webImage.url;
+    }
   });
 
-  // Zorg ervoor dat de grid-items goed passen
   imagesLoaded(container, resizeAllGridItems);
+}
+
+function applySingleColorFilter(
+  imageUrl,
+  selectedColor,
+  tolerance = 30,
+  canvas
+) {
+  const ctx = canvas.getContext("2d");
+  const img = new Image();
+  img.crossOrigin = "Anonymous"; // Prevent CORS issues
+
+  img.onload = function () {
+    // Set the canvas size to match the image size
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    // Draw the image onto the canvas
+    ctx.drawImage(img, 0, 0);
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+
+    const [targetR, targetG, targetB] = hexToRgb(selectedColor);
+
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+
+      if (
+        Math.abs(r - targetR) > tolerance ||
+        Math.abs(g - targetG) > tolerance ||
+        Math.abs(b - targetB) > tolerance
+      ) {
+        const avg = (r + g + b) / 3;
+        data[i] = avg; // Red
+        data[i + 1] = avg; // Green
+        data[i + 2] = avg; // Blue
+      }
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+
+    // Trigger a grid layout recalculation after the filter is applied
+    resizeAllGridItems();
+  };
+
+  img.src = imageUrl;
+}
+
+function hexToRgb(hex) {
+  const bigint = parseInt(hex.substring(1), 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return [r, g, b];
 }
 
 function resizeAllGridItems() {
@@ -113,7 +175,7 @@ function resizeGridItem(item) {
     window.getComputedStyle(grid).getPropertyValue("grid-row-gap")
   );
   const rowSpan = Math.ceil(
-    (item.querySelector("img").getBoundingClientRect().height +
+    (item.querySelector("canvas").getBoundingClientRect().height +
       item.querySelector(".c-artwork-title").getBoundingClientRect().height +
       rowGap) /
       (rowHeight + rowGap)
@@ -121,12 +183,12 @@ function resizeGridItem(item) {
   item.style.gridRowEnd = "span " + rowSpan;
 }
 
-window.addEventListener("resize", resizeAllGridItems);
-
 function imagesLoaded(container, callback) {
-  const images = container.querySelectorAll("img");
+  const images = container.querySelectorAll("canvas");
   let loaded = 0;
-
+  if (images.length === 0) {
+    callback();
+  }
   images.forEach((image) => {
     if (image.complete) {
       loaded++;
@@ -140,65 +202,26 @@ function imagesLoaded(container, callback) {
   });
 }
 
-fetchArtworkData("SK-C-5");
+window.addEventListener("resize", resizeAllGridItems);
 
-function applyColorFilter(imageUrl, allowedColors, tolerance = 30) {
-  const canvas = document.getElementById("filteredArtwork");
-  const ctx = canvas.getContext("2d");
-  const img = new Image();
-  img.crossOrigin = "Anonymous"; // Om CORS-problemen te voorkomen
+document.addEventListener("DOMContentLoaded", function () {
+  // Select a random radio button
+  const radioButtons = document.querySelectorAll('input[name="color"]');
+  const randomIndex = Math.floor(Math.random() * radioButtons.length);
+  const randomRadio = radioButtons[randomIndex];
 
-  img.onload = function () {
-    canvas.width = img.width;
-    canvas.height = img.height;
-    ctx.drawImage(img, 0, 0);
+  // Set the selected color based on the random radio button
+  selectedColor = randomRadio.getAttribute("data-color").substring(1);
 
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
+  // Check the random radio button
+  randomRadio.checked = true;
 
-    for (let i = 0; i < data.length; i += 4) {
-      const r = data[i];
-      const g = data[i + 1];
-      const b = data[i + 2];
+  // Trigger the change event to load artworks for the selected color
+  randomRadio.dispatchEvent(new Event("change"));
 
-      let matchFound = false;
-
-      for (const color of allowedColors) {
-        const [allowedR, allowedG, allowedB] = hexToRgb(color);
-        if (
-          Math.abs(r - allowedR) <= tolerance &&
-          Math.abs(g - allowedG) <= tolerance &&
-          Math.abs(b - allowedB) <= tolerance
-        ) {
-          matchFound = true;
-          break;
-        }
-      }
-
-      if (!matchFound) {
-        const avg = (r + g + b) / 3;
-        data[i] = avg; // Red
-        data[i + 1] = avg; // Green
-        data[i + 2] = avg; // Blue
-      }
-    }
-    ctx.putImageData(imageData, 0, 0);
-  };
-
-  img.src = imageUrl;
-}
-
-function hexToRgb(hex) {
-  const bigint = parseInt(hex.substring(1), 16);
-  const r = (bigint >> 16) & 255;
-  const g = (bigint >> 8) & 255;
-  const b = bigint & 255;
-  return [r, g, b];
-}
-
-// Test de functie met een afbeelding en kleuren
-const allowedColors = ["#261808", "#3E2A1C", "#595145"];
-applyColorFilter(
-  "https://lh3.googleusercontent.com/SsEIJWka3_cYRXXSE8VD3XNOgtOxoZhqW1uB6UFj78eg8gq3G4jAqL4Z_5KwA12aD7Leqp27F653aBkYkRBkEQyeKxfaZPyDx0O8CzWg=w800",
-  allowedColors
-);
+  // Recalculate grid layout after all content is loaded
+  imagesLoaded(
+    document.getElementById("artwork-container"),
+    resizeAllGridItems
+  );
+});

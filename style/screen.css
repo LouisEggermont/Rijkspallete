@@ -403,7 +403,7 @@ label {
   display: grid;
   grid-template-columns: repeat(
     auto-fill,
-    minmax(300px, 1fr)
+    minmax(200px, 1fr)
   ); /* Flexible grid columns */
   grid-auto-rows: 10px; /* Base height for rows */
   gap: var(--global-whitespace-lg); /* Space between grid items */
@@ -424,8 +424,15 @@ label {
   margin-bottom: var(--global-whitespace-xs);
 }
 
+.c-artwork canvas {
+  width: 100%;
+  height: auto;
+  object-fit: contain; /* Keep aspect ratio of the images */
+  margin-bottom: var(--global-whitespace-xs);
+}
+
 .c-artwork-title {
   color: var(--global-text-color);
   font-size: var(--font-size-lg);
-  text-align: center;
+  /* text-align: center; */
 }
