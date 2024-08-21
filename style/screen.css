@@ -1,0 +1,380 @@
+/*---------------------------------------/*
+ # SETTINGS
+/*---------------------------------------*/
+
+:root {
+  --global-color-primary-hsl: 350 100% 20%;
+  --global-color-primary: #530b0e;
+  --global-color-primary-alpha-025: hsla(var(--global-color-primary-hsl), 0.25);
+  --global-color-primary-alpha-050: hsla(var(--global-color-primary-hsl), 0.5);
+
+  --global-color-neutral-1000: #530b0e;
+  --global-color-neutral-900: #6d1b1d;
+  --global-color-neutral-800: #872a2e;
+  --global-color-neutral-700: #a23940;
+  --global-color-neutral-600: #bc4852;
+  --global-color-neutral-500: #d65764;
+  --global-color-neutral-400: #f06676;
+  --global-color-neutral-300: #f68888;
+  --global-color-neutral-200: #f9a8a8;
+  --global-color-neutral-100: #fbc9c9;
+  --global-color-neutral-50: #fde9e9;
+  --global-color-neutral-25: #fef4f4;
+  --global-color-neutral-0: #fff;
+
+  --global-text-color: #f9e9a8;
+  --global-text-color-soft: var(--global-color-neutral-200);
+  --global-text-color-meta: var(--global-color-neutral-500);
+  --global-background-color: #530b0e;
+  --global-front-color: var(--global-color-neutral-0);
+  --global-accent-color: var(--global-color-primary);
+  --global-border-color: var(--global-color-neutral-200);
+  --global-border-color-soft: var(--global-color-neutral-100);
+  --global-border-color-hard: var(--global-color-neutral-300);
+
+  --global-baseline: 0.5rem;
+  --global-whitespace: calc(var(--global-baseline) * 3); /* = 24px */
+  --global-whitespace-xs: calc(var(--global-baseline) / 2); /* = 4px */
+  --global-whitespace-sm: var(--global-baseline); /* = 8px */
+  --global-whitespace-md: calc(var(--global-baseline) * 2); /* = 16px */
+  --global-whitespace-lg: calc(var(--global-baseline) * 4); /* = 32px */
+  --global-whitespace-xl: calc(var(--global-whitespace-md) * 2); /* = 48px */
+  --global-whitespace-xxl: calc(var(--global-baseline) * 9); /* = 72px */
+
+  --global-border-width: 1px;
+  --global-border-radius: 8px;
+  --global-border-radius-sm: 6px;
+  --global-border-radius-xs: 3px;
+
+  --global-label-color: var(--global-text-color-soft);
+  --global-placeholder-color: var(--global-text-color-meta);
+  --global-input-color: var(--global-text-color-soft);
+  --global-input-background-color: var(--global-front-color);
+  --global-input-border-color: var(--global-border-color-soft);
+  --global-input-border-color-hover: var(--global-border-color);
+  --global-input-border-radius: var(--global-border-radius-sm);
+  --global-input-border-width: var(--global-border-width);
+  --global-input-border-color-focus: var(--global-accent-color);
+  --global-input-box-shadow-focus-color: var(--global-color-primary-alpha-025);
+  --global-input-box-shadow-focus: 0 0 0 2px
+    var(--global-input-box-shadow-focus-color);
+
+  font-family: Georgia, serif;
+
+  --font-size-7xl: 4.5rem; /* 72pt */
+  --font-size-6xl: 3.75rem; /* 60pt */
+  --font-size-5xl: 3rem; /* 48pt */
+  --font-size-4xl: 2.25rem; /* 36pt */
+  --font-size-3xl: 1.875rem; /* 30pt */
+  --font-size-2xl: 1.5rem; /* 24pt */
+  --font-size-xl: 1.25rem; /* 20pt */
+  --font-size-lg: 1.125rem; /* 18pt */
+  --font-size-base: 1rem; /* 16pt */
+  --font-size-sm: 0.875rem; /* 14pt */
+  --font-size-xs: 0.75rem; /* 12pt */
+  --font-size-xxs: 0.625rem; /* 10pt */
+}
+
+@media (prefers-color-scheme: dark) {
+  .leaflet-layer,
+  .leaflet-control-zoom-in,
+  .leaflet-control-zoom-out,
+  .leaflet-control-attribution {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+  }
+  :root {
+    /* --global-text-color: var(--global-color-neutral-25);
+    --global-text-color-soft: var(--global-color-neutral-300);
+    --global-text-color-meta: var(--global-color-neutral-500);
+    --global-background-color: var(--global-color-neutral-1000);
+    --global-front-color: var(--global-color-neutral-900);
+    --global-accent-color: var(--global-color-primary);
+    --global-border-color: var(--global-color-neutral-700);
+    --global-border-color-soft: var(--global-color-neutral-800);
+    --global-border-color-hard: var(--global-color-neutral-600);
+    --global-input-box-shadow-focus-color: var(
+      --global-color-primary-alpha-050
+    ); */
+  }
+}
+
+/*---------------------------------------/*
+   # GENERIC
+  /*---------------------------------------*/
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  font-weight: normal;
+}
+
+/* img {
+  display: block;
+  max-width: 20%;
+  max-height: 20%;
+} */
+
+/*---------------------------------------/*
+   # ELEMENTS
+  /*---------------------------------------*/
+
+/*
+      Elements: Page
+      ---
+      Default markup for page level elements
+  */
+
+html {
+  font-size: 100%;
+  /* line-height: 1.5; */
+  /* font-family: "Inter", sans-serif; */
+  color: var(--global-text-color);
+  scroll-behavior: smooth;
+  /* anti aliasing */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--global-background-color);
+  /* background-color: hotpink; */
+}
+
+/*
+      Customize the background color and color to match your design.
+  */
+
+::selection {
+  background: var(--global-color-neutral-900);
+  color: white;
+}
+
+/*
+      Elements: typography
+      ---
+      Default markup for typographic elements
+  */
+
+h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 2.5rem;
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+h3 {
+  font-weight: 700;
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  margin-bottom: var(--global-whitespace-sm);
+}
+
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  margin-bottom: 0;
+}
+
+p,
+ol,
+ul,
+dl,
+table,
+address,
+figure {
+  margin-bottom: 0rem;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li ul,
+li ol {
+  margin-bottom: 0;
+}
+
+blockquote {
+  font-style: italic;
+  font-size: 1.375rem;
+  line-height: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+figcaption {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  margin-top: 0.5rem;
+  color: #73858c;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background: #e3e7e8;
+  margin-bottom: 1.5rem;
+}
+
+a {
+  color: var(--global-color-primary-500);
+  transition: all 0.1s ease-in-out;
+  text-decoration: none;
+}
+
+a:visited {
+  color: var(--global-color-primary-500);
+}
+
+a:hover {
+  color: var(--global-color-primary-400);
+}
+
+a:active {
+  color: #1b4186;
+}
+
+input,
+label {
+  display: block;
+}
+
+/*
+   Object: Button reset
+   ---
+   Small button reset object
+  */
+
+.o-button-reset {
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  overflow: visible;
+  background: transparent;
+
+  /* inherit font & color from ancestor */
+  color: inherit;
+  font: inherit;
+
+  /* Normalize `line-height`. Cannot be changed from `normal` in Firefox 4+. */
+  line-height: normal;
+
+  /* Corrects font smoothing for webkit */
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+
+  /* Corrects inability to style clickable `input` types in iOS */
+  -webkit-appearance: none;
+}
+
+.o-hide-accessible {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+/*------------------------------------*\
+    #COMPONENTS
+  \*------------------------------------*/
+
+/*
+      Component: HEADER
+  */
+
+.c-header {
+  /* display: grid; */
+  /* grid-template-columns: auto 1fr; */
+  /* gap: var(--global-whitespace-lg); */
+  /* flex-direction: row; */
+  /* justify-content: space-between; */
+  /* align-items: center; */
+  /* padding: var(--global-whitespace-lg) var(--global-whitespace-xxl); */
+  display: flex;
+  /* flex-direction: column; */
+  flex-wrap: wrap;
+}
+
+.c-header__title {
+  /* font-size: 0.5rem; */
+  /* font-size: var(--global-size-md); */
+  font-weight: 400;
+  font-size: var(--font-size-7xl);
+  /* color: green; */
+  /* line-height: 3rem; */
+}
+
+.c-header__swatches {
+  display: flex;
+  flex-wrap: nowrap; /* Ensure the swatches don't wrap onto new lines */
+  gap: var(--global-whitespace-md);
+  overflow-x: auto; /* Enable horizontal scrolling */
+  padding-bottom: var(
+    --global-whitespace-xs
+  ); /* Optional: Add some padding to prevent the scrollbar from overlapping the content */
+  scrollbar-width: thin; /* Firefox: Make the scrollbar thinner */
+  scrollbar-color: var(--global-border-color-soft) transparent; /* Firefox: Custom scrollbar color */
+}
+
+.c-custom-option__label {
+  width: 2rem; /* Adjust the width as needed */
+  height: 2rem; /* Adjust the height as needed */
+  /* background-color: green; */
+  flex: 0 0 auto; /* Prevent the swatches from shrinking or growing */
+}
+
+.c-option--hidden:checked + .c-custom-option__label {
+  border: 4px solid white;
+}
+
+/* Optional: Custom scrollbar styling for WebKit browsers (Chrome, Safari) */
+.c-header__swatches::-webkit-scrollbar {
+  height: 8px; /* Adjust the height of the scrollbar */
+}
+
+.c-header__swatches::-webkit-scrollbar-thumb {
+  background-color: var(--global-border-color-soft);
+  border-radius: 4px; /* Round the scrollbar thumb */
+}
+
+/* Add your existing styles here */
+
+.c-artwork-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--global-whitespace-lg);
+  padding: var(--global-whitespace-lg);
+}
+
+.c-artwork {
+  text-align: center;
+}
+
+.c-artwork img {
+  max-width: 100%;
+  /* border-radius: var(--global-border-radius); */
+}
+
+.c-artwork-title {
+  margin-top: var(--global-whitespace-xs);
+  color: var(--global-text-color);
+  font-size: var(--font-size-lg);
+}
