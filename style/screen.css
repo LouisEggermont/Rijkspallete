@@ -497,7 +497,7 @@ label {
   color: var(--global-text-color);
   padding: var(--global-whitespace-md);
   border-radius: var(--global-border-radius);
-  max-width: 700px;
+  max-width: 50vw;
   text-align: left;
   display: flex;
   gap: var(--global-whitespace-lg);
@@ -508,6 +508,18 @@ label {
   /* height: auto; */
   border-radius: 8px;
 }
+
+.modal-details canvas {
+  width: 300px;
+  /* width: 10rem; */
+  /* height: auto; */
+  border-radius: 8px;
+}
+
+/* .modal-details {
+  width: 100%;
+} */
+
 .modal-img {
   display: flex;
   justify-content: center;

@@ -2,6 +2,7 @@ let selectedColor = "E09714"; // Default color
 let applyFilter = false; // Default: Do not apply filter
 let currentPage = 1; // Track the current page
 let currentPeriod = 0;
+let colorChartInstance = null;
 
 // Update the filter status when checkbox changes
 document.getElementById("apply-filter").addEventListener("change", function () {
@@ -71,17 +72,25 @@ function fetchArtworkDetails(objectNumber, image) {
       const artwork = data.artObject;
       // console.log("Artwork:", artwork); // Debug
 
-      // Update the modal with new content
-      // document.querySelector(".modal-img").innerHTML = `
-      //   <img src="${artwork.webImage.url}" alt="${artwork.title}" view-transition-name="artwork-image" />
+      // document.querySelector(".modal-details").innerHTML = `
+      //   <h2>${artwork.title}</h2>
+      //   <p>${artwork.principalOrFirstMaker}, ${artwork.dating.sortingDate} </p>
+      //   <p>${artwork.description || "No description available."}</p>
+      //   <canvas id="colorChart"></canvas>
       // `;
-
       document.querySelector(".modal-details").innerHTML = `
         <h2>${artwork.title}</h2>
         <p>${artwork.principalOrFirstMaker}, ${artwork.dating.sortingDate} </p>
-        <p>${artwork.description || "No description available."}</p>
+        <canvas id="colorChart"></canvas>
       `;
+      const colors = data.artObject.colors.map((color) => color.hex);
+      const percentages = data.artObject.colors.map(
+        (color) => color.percentage
+      );
+      console.log(document.getElementById("colorChart"));
+      createColorChart(colors, percentages);
 
+      console.log(image);
       openModal(image);
     })
     .catch((error) => console.error("Error fetching artwork details:", error));
@@ -302,7 +311,7 @@ function handleImageClick(image) {
     openModal(image, true);
 
     // Fetch the artwork details asynchronously
-    fetchArtworkDetails(objectNumber);
+    fetchArtworkDetails(objectNumber, image);
   });
 }
 
@@ -343,7 +352,8 @@ function closeModal(image) {
   modal.classList.remove("visible");
 
   // modalImgContainer.innerHTML = "";
-  document.querySelector(".modal-details").innerHTML = "";
+  document.querySelector(".modal-details").innerHTML =
+    '<canvas id="colorChart"></canvas>';
 
   // Remove the viewTransitionName after the transition
   image.style.viewTransitionName = "";
@@ -357,3 +367,40 @@ document.querySelector(".modal").addEventListener("click", (e) => {
     });
   }
 });
+
+function createColorChart(colors, percentages) {
+  console.log(document.getElementById("colorChart"));
+  const ctx = document.getElementById("colorChart").getContext("2d");
+
+  if (colorChartInstance) {
+    colorChartInstance.destroy();
+  }
+
+  new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: colors, // Kleuren als labels
+      datasets: [
+        {
+          data: percentages, // Percentage per kleur
+          backgroundColor: colors, // Kleuren gebruiken als achtergrondkleur
+        },
+      ],
+    },
+    options: {
+      responsive: false,
+      plugins: {
+        legend: {
+          position: "right",
+        },
+        tooltip: {
+          callbacks: {
+            label: function (tooltipItem) {
+              return `${tooltipItem.label}: ${tooltipItem.raw}%`;
+            },
+          },
+        },
+      },
+    },
+  });
+}
